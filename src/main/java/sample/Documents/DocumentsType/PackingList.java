@@ -4,8 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sample.AppContext;
 import sample.Documents.Document;
-import sample.Documents.DocumentsManager;
-import sample.Documents.Resource;
 import sample.Documents.ResourcesType.PackingListResource;
 
 import java.io.*;
