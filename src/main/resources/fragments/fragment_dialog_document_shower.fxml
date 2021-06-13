@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainPane" prefHeight="343.0" prefWidth="281.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.DialogFragments.ShowerDialogFragment">
+   <children>
+      <TextArea fx:id="infoField" editable="false" layoutX="14.0" layoutY="50.0" prefHeight="288.0" prefWidth="254.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="20.0" />
+   </children>
+</AnchorPane>
