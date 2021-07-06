@@ -8,6 +8,8 @@ import sample.Documents.ResourcesType.PackingListResource;
 import sample.Documents.ResourcesType.PaymentInvoiceResource;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,14 +32,14 @@ public class PaymentInvoice extends Document {
         }
     }
 
-    public PaymentInvoice(File file){
+    public PaymentInvoice(Path file){
         super(file);
     }
 
     @Override
     public void readFile() throws IOException {
-        LOG.info("Чтение документа Заявка на оплату по пути:" + file.getPath());
-        FileReader stream = new FileReader(file);
+        LOG.info("Чтение документа Заявка на оплату по пути:" + file.toUri());
+        FileReader stream = new FileReader(file.toFile());
         BufferedReader reader = new BufferedReader(stream);
         //Чтение номера документа
         String documentNumber = reader.readLine();
@@ -93,15 +95,15 @@ public class PaymentInvoice extends Document {
 
     @Override
     public void writeFile() throws IOException {
-        LOG.info("Запись данных документа Заявка на оплату по пути:" + file.getPath());
+        LOG.info("Запись данных документа Заявка на оплату по пути:" + file.toUri());
         PaymentInvoiceResource resourceToSave = (PaymentInvoiceResource) resource;
-        if (file.exists()){
+        if (Files.exists(file)){
             LOG.info("Удаление устаревших данных...");
-            file.delete();
+            Files.delete(file);
             LOG.info("Устаревшие данные удалены!");
         }
 
-        FileWriter stream = new FileWriter(file);
+        FileWriter stream = new FileWriter(file.toFile());
         BufferedWriter writer = new BufferedWriter(stream);
         //Запись номера документа
         writer.write(resourceToSave.getDocumentNumber() + "\n");

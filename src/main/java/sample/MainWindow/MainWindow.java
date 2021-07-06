@@ -18,7 +18,6 @@ import sample.DialogFragments.BuildersDialog.PackingListDialogFragment;
 import sample.DialogFragments.BuildersDialog.PaymentInvoiceDialogFragment;
 import sample.DialogFragments.BuildersDialog.PaymentOrderDialogFragment;
 import sample.DialogFragments.DocumentBuildDialogFragment;
-import sample.DialogFragments.PathSelected;
 import sample.DialogFragments.ShowerDialogFragment;
 import sample.Documents.Document;
 import sample.Documents.DocumentsManager;
@@ -28,6 +27,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
@@ -80,7 +81,7 @@ public class MainWindow implements Initializable {
         DocumentsManager manager =
                 ctx.getBean(DocumentsManager.class);
         try {
-            File fileToOpen = new File(action.getPathToFile());
+            Path fileToOpen = Paths.get(action.getPathToFile());
             Document document = manager.getDocument(fileToOpen);
             document.readFile();
             //TODO Создать диалоговое окно, которое продеманстриует ресур документа переданный ему.
@@ -109,7 +110,9 @@ public class MainWindow implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        File fileToImport = fileChooser.showOpenDialog(primaryStage);
+        Path fileToImport = fileChooser
+                        .showOpenDialog(primaryStage)
+                        .toPath();
 
         if (fileToImport != null){
             try{
@@ -134,7 +137,7 @@ public class MainWindow implements Initializable {
                 //Создание момента действия
                 DocumentImported action = new DocumentImported(
                         descriptionToAction.toString(),
-                        fileToImport.getPath());
+                        fileToImport.toFile().getPath());//TODO Перепроверить
 
                 actionHistory.addAction(action);
                 filesList.getItems().add(action);
@@ -200,7 +203,7 @@ public class MainWindow implements Initializable {
                 ActionHistory history = ctx.getBean(ActionHistory.class);
                 history.addAction(action);
                 filesList.getItems().add(action);
-            };
+            }
         });
     }
 }

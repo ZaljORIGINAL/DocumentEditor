@@ -17,6 +17,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.LogManager;
@@ -98,8 +101,9 @@ public class PaymentInvoiceDialogFragment extends DocumentBuildDialogFragment {
                     "\n\tКомиссия: " + resource.getCommission());
 
             String documentName = resource.getDocumentNumber() + " Заявка на оплату";
-            File documentFile = new File(pathToDir, documentName + ".txt");
-            LOG.info("Путь к файлу: " + documentFile.getPath());
+            //TODO Что то не так как по мне
+            Path documentFile = Paths.get(pathToDir, documentName + ".txt");
+            LOG.info("Путь к файлу: " + documentFile.toUri());
             PaymentInvoice document = new PaymentInvoice(documentFile);
             document.setResource(resource);
             document.writeFile();

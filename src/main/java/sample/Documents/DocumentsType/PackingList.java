@@ -7,6 +7,9 @@ import sample.Documents.Document;
 import sample.Documents.ResourcesType.PackingListResource;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,8 +22,9 @@ public class PackingList extends Document {
         try {
             ApplicationContext ctx = new AnnotationConfigApplicationContext(AppContext.class);
             var resource = ctx.getResource("classpath:logger.properties");
-            File loggerFile = resource.getFile();
-            FileInputStream file = new FileInputStream(loggerFile);
+            Path loggerFile = Paths.get(resource.getURI());
+            //TODO Что вернеть метод toString?
+            FileInputStream file = new FileInputStream(loggerFile.toFile());
             LogManager.getLogManager().readConfiguration(file);
             LOG = Logger.getLogger(PackingList.class.getName());
         }catch (Exception e){
@@ -29,14 +33,15 @@ public class PackingList extends Document {
         }
     }
 
-    public PackingList(File file){
+    public PackingList(Path file){
         super(file);
     }
 
     @Override
     public void readFile() throws IOException {
-        LOG.info("Чтение документа Накладаная по пути:" + file.getPath());
-        FileReader stream = new FileReader(file);
+        //TODO Что вернеть метод toUri?
+        LOG.info("Чтение документа Накладаная по пути:" + file.toUri());
+        FileReader stream = new FileReader(file.toFile());
         BufferedReader reader = new BufferedReader(stream);
         //Чтение номера документа
         String documentNumber = reader.readLine();
@@ -92,15 +97,15 @@ public class PackingList extends Document {
 
     @Override
     public void writeFile() throws IOException {
-        LOG.info("Запись данных документа Накладаная по пути:" + file.getPath());
+        LOG.info("Запись данных документа Накладаная по пути:" + file.toUri());
         PackingListResource resourceToSave = (PackingListResource) resource;
-        if (file.exists()){
+        if (Files.exists(file)){
             LOG.info("Удаление устаревших данных...");
-            file.delete();
+            Files.delete(file);
             LOG.info("Устаревшие данные удалены!");
         }
 
-        FileWriter stream = new FileWriter(file);
+        FileWriter stream = new FileWriter(file.toFile());
         BufferedWriter writer = new BufferedWriter(stream);
         //Запись номера документа
         writer.write(resourceToSave.getDocumentNumber() + "\n");
