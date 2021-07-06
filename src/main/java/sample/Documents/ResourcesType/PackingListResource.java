@@ -7,15 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PackingListResource extends Resource {
-    private String userName;
-    private float price;
-    private String currency;
-    private float currencyRate;
-    private String product;
-    private float count;
-
-    public PackingListResource(){
-    }
+    private final String userName;
+    private final float price;
+    private final String currency;
+    private final float currencyRate;
+    private final String product;
+    private final float count;
 
     public PackingListResource(
             String documentNumber,
@@ -68,64 +65,32 @@ public class PackingListResource extends Resource {
         return documentNumber;
     }
 
-    public void setDocumentNumber(String documentNumber) {
-        this.documentNumber = documentNumber;
-    }
-
     public Date getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public float getPrice() {
         return price;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
     }
 
     public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
     public float getCurrencyRate() {
         return currencyRate;
-    }
-
-    public void setCurrencyRate(float currencyRate) {
-        this.currencyRate = currencyRate;
     }
 
     public String getProduct() {
         return product;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
-    }
-
     public float getCount() {
         return count;
-    }
-
-    public void setCount(float count) {
-        this.count = count;
     }
 
     @Override

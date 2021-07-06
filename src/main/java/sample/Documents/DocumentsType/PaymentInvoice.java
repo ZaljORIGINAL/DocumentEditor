@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sample.AppContext;
 import sample.Documents.Document;
-import sample.Documents.ResourcesType.PackingListResource;
 import sample.Documents.ResourcesType.PaymentInvoiceResource;
 
 import java.io.*;
@@ -15,27 +14,14 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class PaymentInvoice extends Document {
-    private static Logger LOG;
-    static {
-        try {
-            ApplicationContext ctx = new AnnotationConfigApplicationContext(AppContext.class);
-            var resource = ctx.getResource("classpath:logger.properties");
-            File loggerFile = resource.getFile();
-            FileInputStream file = new FileInputStream(loggerFile);
-            LogManager.getLogManager().readConfiguration(file);
-            LOG = Logger.getLogger(PaymentInvoice.class.getName());
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-    }
+    private static final Logger LOG = Logger.getLogger(PaymentInvoice.class.getName());
 
     public PaymentInvoice(File file){
         super(file);
     }
 
     @Override
-    public void readFile() throws IOException {
+    public void readFile() throws IOException, ParseException {
         LOG.info("Чтение документа Заявка на оплату по пути:" + file.getPath());
         FileReader stream = new FileReader(file);
         BufferedReader reader = new BufferedReader(stream);
@@ -44,15 +30,10 @@ public class PaymentInvoice extends Document {
         LOG.info("Прочтен номер документа: " + documentNumber);
         //Чтение даты
         Date date = null;
-        try{
-            String dateStr = reader.readLine();
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy/HH:mm:ss");
-            date = formatter.parse(dateStr);
-            LOG.info("Прочтена дата документа: " + date.toString());
-        }catch (ParseException exception){
-            LOG.warning("Ошибка в чтении даты из фалйа. " + exception.getMessage());
-            exception.printStackTrace();
-        }
+        String dateStr = reader.readLine();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy/HH:mm:ss");
+        date = formatter.parse(dateStr);
+        LOG.info("Прочтена дата документа: " + date.toString());
         //Чтение имени
         String userName = reader.readLine();
         LOG.info("Прочтено имя клиента: " + userName);

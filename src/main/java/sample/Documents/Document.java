@@ -2,12 +2,11 @@ package sample.Documents;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 
 public abstract class Document {
-    protected File file;
+    protected final File file;
     protected Resource resource;
-
-    public Document(){};
 
     public Document(File file){
         this.file = file;
@@ -21,7 +20,7 @@ public abstract class Document {
         return file;
     }
 
-    public abstract void readFile() throws IOException;
+    public abstract void readFile() throws IOException, ParseException;
 
     public abstract void writeFile() throws IOException;
 

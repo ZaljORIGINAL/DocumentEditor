@@ -1,38 +1,38 @@
 package sample.Commands;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sample.Commands.Actions.DocumentCreated;
 import sample.Commands.Actions.DocumentImported;
 import sample.Documents.DocumentsManager;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class ActionHistory {
     private static final long SerialVersionUID = 10l;
-    private static Logger LOG;
-    static {
-        try {
-            FileInputStream file = new FileInputStream(
-                    "D:\\Программирование\\Java\\Практическая работа\\NewForm\\src\\main\\resources\\logger.properties");
-            LogManager.getLogManager().readConfiguration(file);
-            LOG = Logger.getLogger(DocumentsManager.class.getName());
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-    }
+    private static final Logger LOG = Logger.getLogger(DocumentsManager.class.getName());
 
-    private ArrayList<FileAction> actions;
+    private final List<FileAction> actions;
 
     public ActionHistory(){
         LOG.info("Конструирование объекта истории действий над файлами");
-        try{
-            readData();
-        }catch (IOException exception){
+        List<FileAction> actions;
+        try {
+            actions = readData();
+        }catch (FileNotFoundException exception){
+            LOG.info(exception.getMessage());
+            LOG.info("Задается пустая история действий!");
+            actions = new ArrayList<>();
+        }catch (ClassNotFoundException | IOException exception){
+            LOG.info(exception.getMessage());
+            LOG.info("Задается пустая история действий!");
             actions = new ArrayList<>();
         }
+        this.actions = actions;
     }
 
     public ArrayList<FileAction> getNewDocumentsAction(){
@@ -76,34 +76,24 @@ public class ActionHistory {
         actions.remove(action);
     }
 
-    public void readData() throws IOException {
-        LOG.info("Востановление прежныжних данных...");
+    public List<FileAction> readData() throws IOException, ClassNotFoundException {
+        LOG.info("Востановление данных...");
         File file = new File("appCach", "actionHistoryData.bin");
-        ObjectInputStream objectOutputStream = null;
-        try {
-            objectOutputStream = new ObjectInputStream(
-                new FileInputStream(file));
-            LOG.info("Попытка чтени прежныжних данных...");
-            actions = (ArrayList<FileAction>) objectOutputStream.readObject();
-            LOG.info("Данные востановлены.");
-        }catch (Exception exception){
-            actions = new ArrayList<>();
-            LOG.warning("Ошибка в востонавлении данных!." + exception.getMessage());
-        }
-        if (objectOutputStream != null) {
-            objectOutputStream.close();
-            LOG.info("Закрытие потока на чтение.");
+        try (ObjectInputStream objectOutputStream = new ObjectInputStream(
+                new FileInputStream(file))) {
+            return (ArrayList<FileAction>) objectOutputStream.readObject();
         }
     }
 
     public void saveData() throws IOException{
         LOG.info("Сохранение историй действий над документами...");
         File file = new File("appCach", "actionHistoryData.bin");
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(
-                new FileOutputStream(file));
-        LOG.info("Попытка сохранения данных...");
-        objectOutputStream.writeObject(actions);
-        objectOutputStream.close();
-        LOG.info("Закрытие потока на чтение.");
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(
+                new FileOutputStream(file))){
+            LOG.info("Попытка сохранения данных...");
+            objectOutputStream.writeObject(actions);
+            objectOutputStream.close();
+            LOG.info("Закрытие потока на чтение.");
+        }
     }
 }

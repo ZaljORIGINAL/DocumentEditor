@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import sample.Commands.Actions.DocumentCreated;
 
 import java.io.File;
+import java.io.IOException;
 
 public abstract class DocumentBuildDialogFragment implements DialogFragment {
     public Pane mainPane;
@@ -22,19 +23,13 @@ public abstract class DocumentBuildDialogFragment implements DialogFragment {
     }
 
     @Override
-    public FXMLLoader initFragmentView(){
+    public FXMLLoader initFragmentView() throws IOException {
         String pathToFXML = getPathToFXML();
-        FXMLLoader loader = null;
-        try {
-            loader = new FXMLLoader(
+        FXMLLoader loader = new FXMLLoader(
                     getClass().getResource(pathToFXML));
-            loader.setControllerFactory(
-                    c -> this);
-            loader.load();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-            loader = null;
-        }
+        loader.setControllerFactory(
+                c -> this);
+        loader.load();
 
         return loader;
     }
@@ -57,12 +52,16 @@ public abstract class DocumentBuildDialogFragment implements DialogFragment {
         }
     }
 
-    public abstract void clickPositiveButton();
-
-    public void clickNegativeButton(ActionEvent actionEvent){
-    }
-
-    public abstract DocumentCreated buildDocument();
+    /*FIXME Просмотрев стек вызовов, в случае ошибки создания
+       документа, пользователю в диалоговом окне видаст ошибку:
+       "Неудалось вызвать окно конструктор документа!". Что
+       неверно, ведь окно конструктора успешно запущено.
+       Все это происходит из за того что может произойти
+       ошибка в записи документа: FileNotExistException, FileNotSuchException.
+       Из разряда IOException. В то же время я получаю ошибку IOException при
+       формировании граффического окна конструктора документа. (Метод
+        buildDocumentConstructorView() -> initFragment())*/
+    public abstract DocumentCreated buildDocument() throws IOException;
 
     private void setPathToDir(String path){
         pathToDir = path;

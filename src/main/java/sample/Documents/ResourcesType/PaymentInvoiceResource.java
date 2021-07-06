@@ -5,14 +5,12 @@ import sample.Documents.Resource;
 import java.util.Date;
 
 public class PaymentInvoiceResource extends Resource {
-    private String userName;
-    private String counterAgent;
-    private float price;
-    private String currency;
-    private float currencyRate;
-    private float commission;
-
-    public PaymentInvoiceResource(){}
+    private final String userName;
+    private final String counterAgent;
+    private final float price;
+    private final String currency;
+    private final float currencyRate;
+    private final float commission;
 
     public PaymentInvoiceResource(
             String documentNumber,
@@ -65,47 +63,23 @@ public class PaymentInvoiceResource extends Resource {
         return userName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public String getCounterAgent() {
         return counterAgent;
-    }
-
-    public void setCounterAgent(String counterAgent) {
-        this.counterAgent = counterAgent;
     }
 
     public float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
     public String getCurrency() {
         return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
     }
 
     public float getCurrencyRate() {
         return currencyRate;
     }
 
-    public void setCurrencyRate(float currencyRate) {
-        this.currencyRate = currencyRate;
-    }
-
     public float getCommission() {
         return commission;
-    }
-
-    public void setCommission(float commission) {
-        this.commission = commission;
     }
 }

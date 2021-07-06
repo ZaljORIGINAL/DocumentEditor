@@ -1,5 +1,7 @@
 package sample.Documents;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sample.Documents.DocumentsType.PackingList;
 import sample.Documents.DocumentsType.PaymentInvoice;
 import sample.Documents.DocumentsType.PaymentOrder;
@@ -13,18 +15,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class DocumentsManager {
-    private static Logger LOG;
-    static {
-        try {
-            FileInputStream file = new FileInputStream(
-                    "D:\\Программирование\\Java\\Практическая работа\\NewForm\\src\\main\\resources\\logger.properties");
-            LogManager.getLogManager().readConfiguration(file);
-            LOG = Logger.getLogger(DocumentsManager.class.getName());
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-    }
+    private final static Logger LOG = Logger.getLogger(DocumentsManager.class.getName());
     /*FIXME Не удается работать с Properties
         Данные задаваемы не сохраняются после завершения работы программы*/
     //private Properties properties;
@@ -59,26 +50,23 @@ public class DocumentsManager {
     public String getDescription(Document document){
         StringBuilder descriptionToAction = new StringBuilder();
 
-        try {
-            Resource resource = document.getResource();
-            //Наименование
-            descriptionToAction.append(resource.getDocumentType());
-            //Дата
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(resource.getDate());
-            descriptionToAction.append("от " +
-                    calendar.get(Calendar.DAY_OF_MONTH) + "." +
-                    calendar.get(Calendar.MONTH) + "." +
-                    calendar.get(Calendar.YEAR) + " ");
-            //Номер документа
-            descriptionToAction.append("номер " + resource.getDocumentNumber());
-        }catch (RuntimeException exception){
-            exception.printStackTrace();
-        }
+        Resource resource = document.getResource();
+        //Наименование
+        descriptionToAction.append(resource.getDocumentType());
+        //Дата
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(resource.getDate());
+        descriptionToAction.append("от " +
+                calendar.get(Calendar.DAY_OF_MONTH) + "." +
+                calendar.get(Calendar.MONTH) + "." +
+                calendar.get(Calendar.YEAR) + " ");
+        //Номер документа
+        descriptionToAction.append("номер " + resource.getDocumentNumber());
 
         return descriptionToAction.toString();
     }
 
+    //FIXME Применить XML
     public String getNewNumberToPackingList() throws IOException {
         //String key = "memory.document.PackingList.lastId";
 
@@ -118,6 +106,7 @@ public class DocumentsManager {
         return newId;
     }
 
+    //FIXME Применить XML
     public String getNewNumberToPaymentOrder() throws IOException{
         LOG.info("Генерация идентификатора для документа Платежка...");
         File file = new File("appCach", "PaymentOrderLastId.txt");
@@ -151,6 +140,7 @@ public class DocumentsManager {
         return newId;
     }
 
+    //FIXME Применить XML
     public String getNewNumberToPaymentInvoice() throws IOException{
         LOG.info("Генерация идентификатора для документа Заявка на оплату...");
         File file = new File("appCach", "PaymentInvoiceLastId.txt");

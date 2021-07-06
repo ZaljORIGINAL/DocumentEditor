@@ -3,8 +3,8 @@ package sample.Commands;
 import java.io.Serializable;
 
 public abstract class FileAction implements Serializable {
-    protected String description;
-    protected String pathToFile;
+    protected final String description;
+    protected final String pathToFile;
 
     public FileAction(String description, String pathToFile) {
         this.description = description;

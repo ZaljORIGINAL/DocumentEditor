@@ -6,9 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PaymentOrderResource extends Resource {
-    private String userName;
-    private float price;
-    private String employeeName;
+    private final String userName;
+    private final float price;
+    private final String employeeName;
 
     public PaymentOrderResource(
             String documentNumber,
@@ -70,17 +70,5 @@ public class PaymentOrderResource extends Resource {
 
     public String getEmployeeName() {
         return employeeName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
     }
 }

@@ -5,9 +5,7 @@ import sample.Documents.Resource;
 import sample.Documents.ResourcesType.PackingListResource;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import static org.junit.Assert.*;
