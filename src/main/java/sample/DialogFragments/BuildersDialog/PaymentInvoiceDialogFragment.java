@@ -12,10 +12,15 @@ import sample.Documents.DocumentsType.PaymentInvoice;
 import sample.Documents.ResourcesType.PaymentInvoiceResource;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.ResourceBundle;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class PaymentInvoiceDialogFragment extends DocumentBuildDialogFragment {
@@ -73,18 +78,19 @@ public class PaymentInvoiceDialogFragment extends DocumentBuildDialogFragment {
                 "\n\tКурс валюты: " + resource.getCurrencyRate() +
                 "\n\tКомиссия: " + resource.getCommission());
 
-        String documentName = resource.getDocumentNumber() + " Заявка на оплату";
-        File documentFile = new File(pathToDir, documentName + ".txt");
-        LOG.info("Путь к файлу: " + documentFile.getPath());
-        PaymentInvoice document = new PaymentInvoice(documentFile);
-        document.setResource(resource);
-        document.writeFile();
+            String documentName = resource.getDocumentNumber() + " Заявка на оплату";
+            //TODO Что то не так как по мне
+            Path documentFile = Paths.get(pathToDir, documentName + ".txt");
+            LOG.info("Путь к файлу: " + documentFile.toUri());
+            PaymentInvoice document = new PaymentInvoice(documentFile);
+            document.setResource(resource);
+            document.writeFile();
 
         //Создание момента действия
         String description = manager.getDescription(document);
         var action = new DocumentCreated(
                     description,
-                    documentFile.getPath());
+                    documentFile.toUri().getPath());
 
         return action;
     }

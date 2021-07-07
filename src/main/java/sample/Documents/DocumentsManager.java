@@ -5,12 +5,11 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import sample.Documents.DocumentsType.PackingList;
 import sample.Documents.DocumentsType.PaymentInvoice;
 import sample.Documents.DocumentsType.PaymentOrder;
-import sample.Documents.ResourcesType.PackingListResource;
-import sample.Main;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Calendar;
-import java.util.Properties;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -25,9 +24,10 @@ public class DocumentsManager {
         LOG.info("Объект менеджера документов создан!");
     }
 
-    public Document getDocument(File file) throws FileNotFoundException{
-        if (file.exists()){
-            String fileName = file.getName();
+    public Document getDocument(Path file) throws FileNotFoundException{
+        if (Files.exists(file)){
+            //TODO Посмотреть что возвращает
+            String fileName = file.getFileName().toString();
             char groupId = fileName.charAt(0);
             switch (groupId){
                 case 'A':
@@ -43,7 +43,7 @@ public class DocumentsManager {
                     throw new RuntimeException("Идентификатор типа документа не зарегестрирован! Переданный индентификатор: " + groupId);
             }
         }else
-            throw new FileNotFoundException("Фаил  не обнаружен. Переданный путь: " + file.getPath());
+            throw new FileNotFoundException("Фаил  не обнаружен. Переданный путь: " + file.toUri());
 
     }
 

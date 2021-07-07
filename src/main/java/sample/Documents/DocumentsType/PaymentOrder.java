@@ -4,9 +4,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sample.AppContext;
 import sample.Documents.Document;
+import sample.Documents.DocumentsManager;
+import sample.Documents.ResourcesType.PackingListResource;
 import sample.Documents.ResourcesType.PaymentOrderResource;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,14 +20,14 @@ import java.util.logging.Logger;
 public class PaymentOrder extends Document {
     private static final Logger LOG = Logger.getLogger(PaymentOrder.class.getName());
 
-    public PaymentOrder(File file){
+    public PaymentOrder(Path file){
         super(file);
     }
 
     @Override
     public void readFile() throws IOException, ParseException {
-        LOG.info("Чтение документа Накладаная по пути:" + file.getPath());
-        FileReader stream = new FileReader(file);
+        LOG.info("Чтение документа Накладаная по пути:" + file.toUri());
+        FileReader stream = new FileReader(file.toFile());
         BufferedReader reader = new BufferedReader(stream);
         //Чтение номера документа
         String documentNumber = reader.readLine();
@@ -60,15 +64,15 @@ public class PaymentOrder extends Document {
 
     @Override
     public void writeFile() throws IOException {
-        LOG.info("Запись данных документа Платежка по пути:" + file.getPath());
+        LOG.info("Запись данных документа Платежка по пути:" + file.toUri());
         PaymentOrderResource resourceToSave = (PaymentOrderResource) resource;
-        if (file.exists()){
+        if (Files.exists(file)){
             LOG.info("Удаление устаревших данных...");
-            file.delete();
+            Files.delete(file);
             LOG.info("Устаревшие данные удалены!");
         }
 
-        FileWriter stream = new FileWriter(file);
+        FileWriter stream = new FileWriter(file.toFile());
         BufferedWriter writer = new BufferedWriter(stream);
         //Запись номера документа
         writer.write(resourceToSave.getDocumentNumber() + "\n");

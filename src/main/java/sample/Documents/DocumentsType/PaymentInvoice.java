@@ -4,9 +4,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import sample.AppContext;
 import sample.Documents.Document;
+import sample.Documents.ResourcesType.PackingListResource;
 import sample.Documents.ResourcesType.PaymentInvoiceResource;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +19,7 @@ import java.util.logging.Logger;
 public class PaymentInvoice extends Document {
     private static final Logger LOG = Logger.getLogger(PaymentInvoice.class.getName());
 
-    public PaymentInvoice(File file){
+    public PaymentInvoice(Path file){
         super(file);
     }
 
@@ -74,15 +77,15 @@ public class PaymentInvoice extends Document {
 
     @Override
     public void writeFile() throws IOException {
-        LOG.info("Запись данных документа Заявка на оплату по пути:" + file.getPath());
+        LOG.info("Запись данных документа Заявка на оплату по пути:" + file.toUri());
         PaymentInvoiceResource resourceToSave = (PaymentInvoiceResource) resource;
-        if (file.exists()){
+        if (Files.exists(file)){
             LOG.info("Удаление устаревших данных...");
-            file.delete();
+            Files.delete(file);
             LOG.info("Устаревшие данные удалены!");
         }
 
-        FileWriter stream = new FileWriter(file);
+        FileWriter stream = new FileWriter(file.toFile());
         BufferedWriter writer = new BufferedWriter(stream);
         //Запись номера документа
         writer.write(resourceToSave.getDocumentNumber() + "\n");

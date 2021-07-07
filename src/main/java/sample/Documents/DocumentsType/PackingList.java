@@ -1,18 +1,25 @@
 package sample.Documents.DocumentsType;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import sample.AppContext;
 import sample.Documents.Document;
 import sample.Documents.ResourcesType.PackingListResource;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class PackingList extends Document {
     private static final Logger LOG = Logger.getLogger(PackingList.class.getName());
 
-    public PackingList(File file){
+    public PackingList(Path file){
         super(file);
     }
 
@@ -69,15 +76,15 @@ public class PackingList extends Document {
 
     @Override
     public void writeFile() throws IOException {
-        LOG.info("Запись данных документа Накладаная по пути:" + file.getPath());
+        LOG.info("Запись данных документа Накладаная по пути:" + file.toUri());
         PackingListResource resourceToSave = (PackingListResource) resource;
-        if (file.exists()){
+        if (Files.exists(file)){
             LOG.info("Удаление устаревших данных...");
-            file.delete();
+            Files.delete(file);
             LOG.info("Устаревшие данные удалены!");
         }
 
-        FileWriter stream = new FileWriter(file);
+        FileWriter stream = new FileWriter(file.toFile());
         BufferedWriter writer = new BufferedWriter(stream);
         //Запись номера документа
         writer.write(resourceToSave.getDocumentNumber() + "\n");
