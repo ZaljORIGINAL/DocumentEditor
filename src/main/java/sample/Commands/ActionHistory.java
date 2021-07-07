@@ -7,6 +7,7 @@ import sample.Commands.Actions.DocumentImported;
 import sample.Documents.DocumentsManager;
 
 import java.io.*;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogManager;
@@ -23,7 +24,7 @@ public class ActionHistory {
         List<FileAction> actions;
         try {
             actions = readData();
-        }catch (FileNotFoundException exception){
+        }catch (FileNotFoundException | NoSuchFileException exception){
             LOG.info(exception.getMessage());
             LOG.info("Задается пустая история действий!");
             actions = new ArrayList<>();
