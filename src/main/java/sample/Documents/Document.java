@@ -2,13 +2,14 @@ package sample.Documents;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.ParseException;
 
 public abstract class Document {
-    protected final File file;
+    protected final Path file;
     protected Resource resource;
 
-    public Document(File file){
+    public Document(Path file){
         this.file = file;
     }
 
@@ -16,7 +17,7 @@ public abstract class Document {
         return resource.getDocumentType();
     }
 
-    public File getFile() {
+    public Path getFile() {
         return file;
     }
 

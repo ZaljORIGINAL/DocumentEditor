@@ -5,6 +5,8 @@ import sample.Documents.Resource;
 import sample.Documents.ResourcesType.PackingListResource;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -25,7 +27,7 @@ public class PackingListTest {
                 73f,
                 "Keyboard",
                 1f);
-        File file = new File("D:\\Программирование\\Java\\Практическая работа\\Максим технологии\\Task1\\src\\test\\java\\sample\\Documents\\DocumentsType", "fileToPackingListReadTest.txt");
+        Path file = Paths.get("D:\\Программирование\\Java\\Практическая работа\\Максим технологии\\Task1\\src\\test\\java\\sample\\Documents\\DocumentsType", "fileToPackingListReadTest.txt");
         PackingList document = new PackingList(file);
         document.readFile();
         Resource resource = document.getResource();
@@ -35,7 +37,7 @@ public class PackingListTest {
 
     @Test
     public void writeResourceTest() throws Exception{
-        File file = new File("D:\\Программирование\\Java\\Практическая работа\\Максим технологии\\Task1\\src\\test\\java\\sample\\Documents\\DocumentsType", "fileToPackingListWriteTest.txt");
+        Path file = Paths.get("D:\\Программирование\\Java\\Практическая работа\\Максим технологии\\Task1\\src\\test\\java\\sample\\Documents\\DocumentsType", "fileToPackingListWriteTest.txt");
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy/HH:mm:ss");
         Date dateToCheck = formatter.parse("25/5/1958/19:32:12");
         Resource actual = new PackingListResource(

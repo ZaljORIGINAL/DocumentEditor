@@ -18,13 +18,11 @@ import sample.DialogFragments.BuildersDialog.PackingListDialogFragment;
 import sample.DialogFragments.BuildersDialog.PaymentInvoiceDialogFragment;
 import sample.DialogFragments.BuildersDialog.PaymentOrderDialogFragment;
 import sample.DialogFragments.DocumentBuildDialogFragment;
-import sample.DialogFragments.PathSelected;
 import sample.DialogFragments.ShowerDialogFragment;
 import sample.Documents.Document;
 import sample.Documents.DocumentsManager;
 import sample.Documents.Resource;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -298,24 +296,20 @@ public class MainWindow implements Initializable {
         fragment.setCallBack(() -> createButton.setDisable(false));
         LOG.info("Парамеры успешно установлены.");
 
-        //FIXME Что то поплыл. Разобраться что за ключь. Кто ты такой этот Pair
         dialog.setResultConverter(dialogButton -> {
-            try {
                 if (dialogButton == createButtonType) {
-                    DocumentCreated action = fragment.buildDocument();
-                    return new Pair<>(
-                            "answer",
-                            action);
+                    try {
+                        DocumentCreated action = fragment.buildDocument();
+                        return new Pair<>(
+                               "answer",
+                                action);
+                    }catch (IOException exception){
+                        LOG.info("Неудалось сконструировать документ. " +
+                                exception.getMessage());
+                        exception.printStackTrace();
+                    }
                 }
-            } catch (FileNotFoundException | NoSuchFileException exception) {
-                LOG.info("В ходе конструирования документа ненайден " +
-                        "вспомогающий фаил. " + exception.getMessage());
-                exception.printStackTrace();
-            }catch (IOException exception){
-                LOG.info("Неудалось сконструировать документ. " +
-                        exception.getMessage());
-                exception.printStackTrace();
-            }
+
             return null;
         });
 

@@ -75,8 +75,9 @@ public class PackingListDialogFragment extends DocumentBuildDialogFragment {
 
         String documentName = resource.getDocumentNumber() + " Накладная";
         File documentFile = new File(pathToDir, documentName + ".txt");
+        var documentPath = documentFile.toPath();
         LOG.info("Путь к файлу: " + documentFile.getPath());
-        PackingList document = new PackingList(documentFile);
+        PackingList document = new PackingList(documentPath);
         document.setResource(resource);
         document.writeFile();
 

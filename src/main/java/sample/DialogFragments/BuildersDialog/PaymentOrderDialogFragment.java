@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.logging.LogManager;
@@ -60,8 +61,8 @@ public class PaymentOrderDialogFragment extends DocumentBuildDialogFragment {
                 "\n\tСотрудник: " + resource.getEmployeeName());
 
         String documentName = resource.getDocumentNumber() + " платежка";
-        File documentFile = new File(pathToDir, documentName + ".txt");
-        LOG.info("Путь к файлу: " + documentFile.getPath());
+        Path documentFile = new File(pathToDir, documentName + ".txt").toPath();
+        LOG.info("Путь к файлу: " + documentFile.toUri().getPath());
         PaymentOrder document = new PaymentOrder(documentFile);
         document.setResource(resource);
         document.writeFile();
@@ -70,7 +71,7 @@ public class PaymentOrderDialogFragment extends DocumentBuildDialogFragment {
         String description = manager.getDescription(document);
         var action = new DocumentCreated(
                     description,
-                    documentFile.getPath());
+                    documentFile.toUri().getPath());
 
         return action;
     }

@@ -25,8 +25,8 @@ public class PackingList extends Document {
 
     @Override
     public void readFile() throws IOException, ParseException {
-        LOG.info("Чтение документа Накладаная по пути:" + file.getPath());
-        FileReader stream = new FileReader(file);
+        LOG.info("Чтение документа Накладаная по пути:" + file.toUri().getPath());
+        FileReader stream = new FileReader(file.toFile());
         BufferedReader reader = new BufferedReader(stream);
         //Чтение номера документа
         String documentNumber = reader.readLine();
