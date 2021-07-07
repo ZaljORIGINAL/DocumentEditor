@@ -22,11 +22,11 @@ import sample.DialogFragments.ShowerDialogFragment;
 import sample.Documents.Document;
 import sample.Documents.DocumentsManager;
 import sample.Documents.Resource;
+import sample.Exceptions.IOExceptions.DocumentCreateException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -303,10 +303,21 @@ public class MainWindow implements Initializable {
                         return new Pair<>(
                                "answer",
                                 action);
-                    }catch (IOException exception){
+                        /*FIXME Метод buildDocument() ВЫКИДЫВАЕТ IOException
+                            Но при запуске выходит ошибка:
+                            exception java.io.IOException is never thrown in body of corresponding try statement.
+                            Возможно из за того, что в сигнатуре мтода
+                            ошибки типа IOException ПРОБРАСЫВАЕТСЯ ВЫШЕ.
+                         */
+                    }catch (DocumentCreateException exception){
                         LOG.info("Неудалось сконструировать документ. " +
                                 exception.getMessage());
                         exception.printStackTrace();
+                        Alert messageDialog = new Alert(Alert.AlertType.ERROR);
+                        messageDialog.setTitle("Ошибка");
+                        messageDialog.setHeaderText("Ошибка в конструировании документа");
+                        messageDialog.setContentText(exception.getMessage());
+                        messageDialog.showAndWait();
                     }
                 }
 
