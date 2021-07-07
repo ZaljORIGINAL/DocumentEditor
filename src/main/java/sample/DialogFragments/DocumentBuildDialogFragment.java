@@ -6,7 +6,14 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import sample.AppContext;
 import sample.Commands.Actions.DocumentCreated;
+import sample.Documents.Document;
+import sample.Documents.DocumentsManager;
+import sample.Documents.Resource;
+import sample.Exceptions.IOExceptions.DocumentCreateException;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +33,7 @@ public abstract class DocumentBuildDialogFragment implements DialogFragment {
     public FXMLLoader initFragmentView() throws IOException {
         String pathToFXML = getPathToFXML();
         FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(pathToFXML));
+                getClass().getResource(pathToFXML));
         loader.setControllerFactory(
                 c -> this);
         loader.load();
@@ -56,15 +63,37 @@ public abstract class DocumentBuildDialogFragment implements DialogFragment {
        документа, пользователю в диалоговом окне видаст ошибку:
        "Неудалось вызвать окно конструктор документа!". Что
        неверно, ведь окно конструктора успешно запущено.
-       Все это происходит из за того что может произойти
-       ошибка в записи документа: FileNotExistException, FileNotSuchException.
-       Из разряда IOException. В то же время я получаю ошибку IOException при
+       Все это происходит из за того что ошибка IOException выпадает
+       при записи/чтении файла и то же время при
        формировании граффического окна конструктора документа. (Метод
         buildDocumentConstructorView() -> initFragment())*/
-    public abstract DocumentCreated buildDocument() throws IOException;
+    public DocumentCreated buildDocument() throws DocumentCreateException{
+        ApplicationContext ctx =
+                new AnnotationConfigApplicationContext(AppContext.class);
+        DocumentsManager manager = ctx.getBean(DocumentsManager.class);
 
-    private void setPathToDir(String path){
+        Resource resource = generationResource(manager);
+        Document document = saveResource(resource);
+
+
+        //Создание момента действия
+        String description = manager.getDescription(document);
+        String pathToDocument = document.getFile().toUri().getPath();
+        var action = new DocumentCreated(
+                description,
+                pathToDocument);
+
+        return action;
+    }
+
+    protected void setPathToDir(String path){
         pathToDir = path;
         callBack.notif();
     }
+
+    protected abstract Resource generationResource(DocumentsManager manager)
+            throws DocumentCreateException;
+
+    protected abstract Document saveResource(Resource resource)
+            throws DocumentCreateException;
 }
